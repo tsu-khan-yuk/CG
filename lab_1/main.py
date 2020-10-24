@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 
 class Dot:
@@ -18,7 +19,8 @@ class Dot:
         return '({}, {})'.format(self.x, self.y)
 
 
-def CDA(dot_1: Dot, dot_2: Dot) -> None:
+def DDA(dot_1: Dot, dot_2: Dot) -> None:
+    start_time = time.clock()
     if np.abs(dot_2.x - dot_1.x) >= np.abs(dot_2.y - dot_1.y):
         length = np.abs(dot_2.x - dot_1.x)
     else:
@@ -27,7 +29,7 @@ def CDA(dot_1: Dot, dot_2: Dot) -> None:
     delta_x = (dot_2.x - dot_1.x) / length
     delta_y = (dot_2.y - dot_1.y) / length
 
-    print('Output --> {}, {}'. format(delta_x, delta_y))
+    print('Output --> {}'. format(time.clock() - start_time))
 
 
 if __name__ == '__main__':
@@ -36,4 +38,4 @@ if __name__ == '__main__':
     dot2 = Dot(x=1, y=2)
     print('dot1 = {}, dot2 = {}'.format(dot1, dot2))
 
-    CDA(dot1, dot2)
+    DDA(dot1, dot2)
