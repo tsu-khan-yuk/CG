@@ -234,10 +234,12 @@ class RasterizationAlgorithms:
 		print(t2 - t1)
 	
 	def draw(self, coords):
+		print(coords)
 		for point in coords:
+			print(point)
 			self.canvas.create_rectangle(PIXEL_SIZE * point[0], PIXEL_SIZE * point[1],
 										 PIXEL_SIZE * point[0] + PIXEL_SIZE, PIXEL_SIZE * point[1] + PIXEL_SIZE,
-										 fill="black", tag="surname")
+										 fill="white", tag="surname")
 	
 	def clean(self):
 		self.canvas.delete("surname")
@@ -262,7 +264,7 @@ class RasterizationAlgorithms:
 		window = tk.Tk()
 		window.title("Lab1 Brykalova")
 		# Place canvas in the window
-		self.canvas = tk.Canvas(window, width=WIDTH, height=HEIGHT, bg="light blue")
+		self.canvas = tk.Canvas(window, width=WIDTH, height=HEIGHT, bg="black")
 		self.canvas.pack()
 		# Draw Frame in the window
 		frame = tk.Frame(window, bg="light blue")
