@@ -234,9 +234,7 @@ class RasterizationAlgorithms:
 		print(t2 - t1)
 	
 	def draw(self, coords):
-		print(coords)
 		for point in coords:
-			print(point)
 			self.canvas.create_rectangle(PIXEL_SIZE * point[0], PIXEL_SIZE * point[1],
 										 PIXEL_SIZE * point[0] + PIXEL_SIZE, PIXEL_SIZE * point[1] + PIXEL_SIZE,
 										 fill="white", tag="surname")
