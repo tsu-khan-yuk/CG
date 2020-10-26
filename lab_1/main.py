@@ -117,7 +117,7 @@ class Painter:
 
     def algorithm_manager(self, algorithm_name: str):
         if algorithm_name == 'cycle_Bresenham':
-            return lambda name=algorithm_name: getattr(self, 'cycle_Bresenham')(Dot(85, 60), 15)
+            return lambda name=algorithm_name: getattr(self, algorithm_name)(Dot(85, 60), 15)
         else:
             def func():
                 for letter in self.word.keys():
