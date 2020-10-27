@@ -1,7 +1,3 @@
-"""
-TODO:
-    --> add logging
-"""
 import tkinter as tk
 import numpy as np
 import warnings
@@ -33,6 +29,9 @@ class Dot:
             self.y = y
         else:
             raise TypeError('Invalid "x" or "y" type')
+
+    def deepcopy(self):
+        return Dot(self.x, self.y)
 
     def __str__(self) -> str:
         return '({}, {})'.format(self.x, self.y)
@@ -192,26 +191,28 @@ class Painter:
         delta_y = dot_2.y - dot_1.y
         # Determine how steep the line is
         is_steep = np.abs(delta_y) > np.abs(delta_x)
+        coord_1 = dot_1.deepcopy()
+        coord_2 = dot_2.deepcopy()
         # Rotate line
         if is_steep:
-            dot_1.x, dot_1.y = dot_1.y, dot_1.x
-            dot_2.x, dot_2.y = dot_2.y, dot_2.x
+            coord_1.x, coord_1.y = coord_1.y, coord_1.x
+            coord_2.x, coord_2.y = coord_2.y, coord_2.x
         # Swap start and end points if necessary
-        if dot_1.x > dot_2.x:
-            dot_1.x, dot_2.x = dot_2.x, dot_1.x
-            dot_1.y, dot_2.y = dot_2.y, dot_1.y
+        if coord_1.x > coord_2.x:
+            coord_1.x, coord_2.x = coord_2.x, coord_1.x
+            coord_1.y, coord_2.y = coord_2.y, coord_1.y
         
         # Recalculate differentials
-        delta_x = dot_2.x - dot_1.x
-        delta_y = dot_2.y - dot_1.y
+        delta_x = coord_2.x - coord_1.x
+        delta_y = coord_2.y - coord_1.y
         
         # Calculate error
         error = int(delta_x / 2.0)
-        ystep = 1 if dot_1.y < dot_2.y else -1
+        ystep = 1 if coord_1.y < coord_2.y else -1
         
         # Iterate over bounding box generating points between start and end
-        y = dot_1.y
-        for x in range(dot_1.x, dot_2.x + 1):
+        y = coord_1.y
+        for x in range(coord_1.x, coord_2.x + 1):
             self.draw(Dot(y, x) if is_steep else Dot(x, y))
             error -= np.abs(delta_y)
             if error < 0:
