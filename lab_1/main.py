@@ -268,6 +268,3 @@ class Painter:
 
 if __name__ == '__main__':
     val = Painter()
-
-
-    
