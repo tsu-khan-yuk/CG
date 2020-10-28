@@ -1,4 +1,5 @@
 import tkinter as tk
+import numpy as np
 PIXEL_SIZE = 5
 
 
@@ -32,6 +33,8 @@ class BezierCalculator:
         frame = tk.Frame(root, bg='black')
         frame.pack()
 
+        self.curve_calculating(Dot(0, 0), Dot(10, 15), Dot(60, 40), Dot(90, 50))
+
         root.mainloop()
 
     def clean(self):
@@ -46,6 +49,17 @@ class BezierCalculator:
             fill="white",
             tag="bezier"
         )
+
+    def curve_calculating(self, p1: Dot, p2: Dot, p3: Dot, p4: Dot):
+        x_t = lambda t: p1.x*((1 - t)**3) + 3*t*p2.x*((1 - t)**2) + 3*(t**2)*p3.x*(1 - t) + (t**3)*p4.x
+        y_t = lambda t: p1.y*((1 - t)**3) + 3*t*p2.y*((1 - t)**2) + 3*(t**2)*p3.y*(1 - t) + (t**3)*p4.y
+        delta_t = 0
+        while delta_t <= 2:
+            x = x_t(delta_t)
+            y = y_t(delta_t)
+            print(round(x, 2), round(y, 2))
+            self.draw(Dot(round(x, 2), round(y, 2)))
+            delta_t += 0.09
 
 
 if __name__ == '__main__':
