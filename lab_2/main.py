@@ -1,3 +1,7 @@
+"""
+    # TODO:
+        -> add graphic function
+"""
 import tkinter as tk
 import numpy as np
 PIXEL_SIZE = 5
@@ -33,7 +37,14 @@ class BezierCalculator:
         frame = tk.Frame(root, bg='black')
         frame.pack()
 
-        self.curve_calculating(Dot(0, 0), Dot(10, 15), Dot(60, 40), Dot(90, 50))
+        test_dot_list = [
+            Dot(2, 20),
+            Dot(20, 5),
+            Dot(40, 40),
+            Dot(70, 20)
+        ]
+
+        self.curve_calculating(test_dot_list)
 
         root.mainloop()
 
@@ -50,16 +61,22 @@ class BezierCalculator:
             tag="bezier"
         )
 
-    def curve_calculating(self, p1: Dot, p2: Dot, p3: Dot, p4: Dot):
-        x_t = lambda t: p1.x*((1 - t)**3) + 3*t*p2.x*((1 - t)**2) + 3*(t**2)*p3.x*(1 - t) + (t**3)*p4.x
-        y_t = lambda t: p1.y*((1 - t)**3) + 3*t*p2.y*((1 - t)**2) + 3*(t**2)*p3.y*(1 - t) + (t**3)*p4.y
+    @staticmethod
+    def x_t(t, p: Dot):
+        return p[0].x*((1 - t)**3) + 3*t*p[1].x*((1 - t)**2) + 3*(t**2)*p[2].x*(1 - t) + (t**3)*p[3].x
+
+    @staticmethod
+    def y_t(t, p: Dot):
+        return p[0].y*((1 - t)**3) + 3*t*p[1].y*((1 - t)**2) + 3*(t**2)*p[2].y*(1 - t) + (t**3)*p[3].y
+
+    def curve_calculating(self, dots: list):
         delta_t = 0
-        while delta_t <= 2:
-            x = x_t(delta_t)
-            y = y_t(delta_t)
+        while delta_t <= 1:
+            x = self.x_t(delta_t, dots)
+            y = self.y_t(delta_t, dots)
             print(round(x, 2), round(y, 2))
             self.draw(Dot(round(x, 2), round(y, 2)))
-            delta_t += 0.09
+            delta_t += 0.01
 
 
 if __name__ == '__main__':
