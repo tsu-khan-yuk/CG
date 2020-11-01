@@ -38,7 +38,7 @@ class BezierCalculator:
 
         root = tk.Tk()
         root.title('Lab 2')
-        self.canvas = tk.Canvas(root, width=800, height=500, bg='black')
+        self.canvas = tk.Canvas(root, width=1200, height=500, bg='black')
         self.canvas.pack()
         frame = tk.Frame(root, bg='black')
         frame.pack()
@@ -73,9 +73,12 @@ class BezierCalculator:
         left_button = tk.Button(frame, text='\t\tleft\t\t', command=self.button_manager('left'))
         left_button.grid(row=1, column=3)
 
-        #//////////////////////////////////////////////// SCALING /////////////////////////////////////////////////////// 
+        #//////////////////////////////////////////////// SCALING ///////////////////////////////////////////////////////
+        x1_button = tk.Button(frame, text='\t\t1x\t\t', command=self.button_manager('1x'))
+        x1_button.grid(row=2, column=0)
+
         x2_button = tk.Button(frame, text='\t\t2x\t\t', command=self.button_manager('2x'))
-        x2_button.grid(row=2, column=0)
+        x2_button.grid(row=2, column=1)
 
         # up_button = tk.Button(frame, text='\t\tup\t\t', command=self.button_manager('up'))
         # up_button.grid(row=1, column=1)
@@ -88,7 +91,7 @@ class BezierCalculator:
     def button_manager(self, button_name: str):
         if button_name in {'up', 'down', 'left', 'right'}:
             return lambda name=button_name: getattr(self, 'shifting_function')(name)
-        elif button_name in {'1x', '2x', '3x'}:
+        elif button_name in {'1x', '2x'}:
             return lambda zoom=button_name: getattr(self, 'scaling_function')(zoom)
 
     def shifting_function(self, cmd: str):
@@ -106,7 +109,11 @@ class BezierCalculator:
         self.draw_rastring()
 
     def scaling_function(self, zoom):
-        pass
+        if '1' in zoom:
+            self.draw_rastring()
+        elif '2' in zoom:
+            self.clean()
+            self.canvas.scale('bezier', 0, 0, 2, 2)
 
     def mirroring_function(self):
         pass
