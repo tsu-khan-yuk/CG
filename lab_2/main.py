@@ -109,10 +109,9 @@ class BezierCalculator:
         self.draw_rastring()
 
     def scaling_function(self, zoom):
-        if '1' in zoom:
-            self.draw_rastring()
-        elif '2' in zoom:
-            self.clean()
+        self.clean()
+        self.draw_rastring()
+        if '2' in zoom:
             self.canvas.scale('bezier', 0, 0, 2, 2)
 
     def mirroring_function(self):
