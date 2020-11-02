@@ -33,6 +33,9 @@ class Dot:
 
 class BezierCalculator:
     dots = list()
+    scale = 1
+    x_flag = True
+    y_flag = True
 
     def __init__(self):
 
@@ -44,10 +47,10 @@ class BezierCalculator:
         frame.pack()
 
         test_dot_list = [
-            Dot(2, 20),
-            Dot(20, 5),
-            Dot(40, 40),
-            Dot(60, 20)
+            Dot(82, 40),
+            Dot(100, 25),
+            Dot(120, 60),
+            Dot(140, 40)
         ]
 
         self.curve_calculating(test_dot_list)
@@ -55,8 +58,8 @@ class BezierCalculator:
         """
         # TODO:
             -> поворот на угол      []
-            -> маштабирование       []
-            -> отдзеркаливание      []
+            -> маштабирование       [*]
+            -> отдзеркаливание      [*]
             -> зсув                 [*]
         """
 
@@ -80,8 +83,11 @@ class BezierCalculator:
         x2_button = tk.Button(frame, text='\t\t2x\t\t', command=self.button_manager('2x'))
         x2_button.grid(row=2, column=1)
 
-        # up_button = tk.Button(frame, text='\t\tup\t\t', command=self.button_manager('up'))
-        # up_button.grid(row=1, column=1)
+        x_mirroring_button = tk.Button(frame, text='\t\tmirroring X\t\t', command=self.button_manager('mirroringX'))
+        x_mirroring_button.grid(row=2, column=2)
+
+        y_mirroring_button = tk.Button(frame, text='\t\tmirroring Y\t\t', command=self.button_manager('mirroringY'))
+        y_mirroring_button.grid(row=2, column=3)
 
         # up_button = tk.Button(frame, text='\t\tup\t\t', command=self.button_manager('up'))
         # up_button.grid(row=1, column=1)
@@ -93,6 +99,8 @@ class BezierCalculator:
             return lambda name=button_name: getattr(self, 'shifting_function')(name)
         elif button_name in {'1x', '2x'}:
             return lambda zoom=button_name: getattr(self, 'scaling_function')(zoom)
+        elif 'mirroring' in button_name:
+            return lambda axis=button_name: getattr(self, 'mirroring_function')(axis)
 
     def shifting_function(self, cmd: str):
         self.clean()
@@ -110,12 +118,30 @@ class BezierCalculator:
 
     def scaling_function(self, zoom):
         self.clean()
+        if '1' in zoom:
+            self.scale = 1
+        elif '2' in zoom:
+            self.scale = 2
         self.draw_rastring()
-        if '2' in zoom:
-            self.canvas.scale('bezier', 0, 0, 2, 2)
 
-    def mirroring_function(self):
-        pass
+    def mirroring_function(self, axis):
+        self.clean()
+        length = len(self.dots) - 1
+        if 'X' in axis:
+            axis_delta = 20 if self.y_flag else -20
+            self.y_flag = not self.y_flag
+            for i in range(round(length/2)):
+                self.dots[i].y += axis_delta
+                self.dots[length - i].y += axis_delta
+                self.dots[i].y, self.dots[length - i].y = self.dots[length - i].y, self.dots[i].y
+        elif 'Y' in axis:
+            axis_delta = 58 if self.x_flag else -58
+            self.x_flag = not self.x_flag
+            for i in range(round(length/2)):
+                self.dots[i].x += axis_delta
+                self.dots[length - i].x += axis_delta
+                self.dots[i].x, self.dots[length - i].x = self.dots[length - i].x, self.dots[i].x
+        self.draw_rastring()
 
     def angle_function(self):
         pass
@@ -172,6 +198,8 @@ class BezierCalculator:
                 y += delta_y
                 i += 1
             j += 1
+        if self.scale == 2:
+            self.canvas.scale('bezier', 0, 0, self.scale, self.scale)
 
 if __name__ == '__main__':
     var = BezierCalculator()
