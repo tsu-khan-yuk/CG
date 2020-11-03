@@ -83,6 +83,7 @@ class BezierCalculator:
         x2_button = tk.Button(frame, text='\t\t2x\t\t', command=self.button_manager('2x'))
         x2_button.grid(row=2, column=1)
 
+        #//////////////////////////////////////////////// MIRRORING ///////////////////////////////////////////////////////
         x_mirroring_button = tk.Button(frame, text='\t\tmirroring X\t\t', command=self.button_manager('mirroringX'))
         x_mirroring_button.grid(row=2, column=2)
 
