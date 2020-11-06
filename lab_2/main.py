@@ -33,7 +33,11 @@ class Dot:
 
 class BezierCalculator:
     dots = list()
+    width = int()
+    height = int()
     scale = 1
+    first_x = None
+    first_y = None
     x_flag = True
     y_flag = True
 
@@ -57,7 +61,7 @@ class BezierCalculator:
         self.draw_rastring()
         """
         # TODO:
-            -> поворот на угол      []
+            -> поворот на угол      [*]
             -> маштабирование       [*]
             -> отдзеркаливание      [*]
             -> зсув                 [*]
@@ -90,8 +94,9 @@ class BezierCalculator:
         y_mirroring_button = tk.Button(frame, text='\t\tmirroring Y\t\t', command=self.button_manager('mirroringY'))
         y_mirroring_button.grid(row=2, column=3)
 
-        # up_button = tk.Button(frame, text='\t\tup\t\t', command=self.button_manager('up'))
-        # up_button.grid(row=1, column=1)
+        #//////////////////////////////////////////////// ANGLE /////////////////////////////////////////////////////////
+        turn_clockwise_button = tk.Button(frame, text='\t\tturn clockwise\t\t', command=self.button_manager('forward 45'))
+        turn_clockwise_button.grid(row=3, column=2)
 
         root.mainloop()
 
@@ -102,6 +107,8 @@ class BezierCalculator:
             return lambda zoom=button_name: getattr(self, 'scaling_function')(zoom)
         elif 'mirroring' in button_name:
             return lambda axis=button_name: getattr(self, 'mirroring_function')(axis)
+        elif button_name == 'forward':
+            return lambda angle=45: getattr(self, 'angle_function')(angle)
 
     def shifting_function(self, cmd: str):
         self.clean()
@@ -129,14 +136,14 @@ class BezierCalculator:
         self.clean()
         length = len(self.dots) - 1
         if 'X' in axis:
-            axis_delta = 20 if self.y_flag else -20
+            axis_delta = self.height if self.y_flag else -(self.height)
             self.y_flag = not self.y_flag
             for i in range(round(length/2)):
                 self.dots[i].y += axis_delta
                 self.dots[length - i].y += axis_delta
                 self.dots[i].y, self.dots[length - i].y = self.dots[length - i].y, self.dots[i].y
         elif 'Y' in axis:
-            axis_delta = 58 if self.x_flag else -58
+            axis_delta = self.width if self.x_flag else -(self.width)
             self.x_flag = not self.x_flag
             for i in range(round(length/2)):
                 self.dots[i].x += axis_delta
@@ -144,8 +151,23 @@ class BezierCalculator:
                 self.dots[i].x, self.dots[length - i].x = self.dots[length - i].x, self.dots[i].x
         self.draw_rastring()
 
-    def angle_function(self):
-        pass
+    def angle_function(self, angle):
+        self.clean()
+        angle *= (np.pi / 180.0)
+        buffer = list()
+        x_shifting = (self.first_x + self.width/2)
+        y_shifting = (self.first_y + self.height/2)
+
+        for dot in self.dots:
+            x = dot.x - x_shifting
+            y = dot.y - y_shifting
+            buffer.append(Dot(
+                x=(x * np.cos(angle) - y * np.sin(angle)) + x_shifting,
+                y=(x * np.sin(angle) + y * np.cos(angle)) + y_shifting
+            ))
+
+        self.dots = buffer
+        self.draw_rastring()
 
     def clean(self):
         self.canvas.delete('bezier')
@@ -176,6 +198,12 @@ class BezierCalculator:
             # self.draw(Dot(round(x, 2), round(y, 2)))
             self.dots.append(Dot(round(x, 2), round(y, 2)))
             delta_t += 0.01
+        x_list = sorted([i.x for i in points])
+        y_list = sorted([i.y for i in points])
+        self.first_x = x_list[0]
+        self.first_y = y_list[0]
+        self.width = x_list[-1] - x_list[0]
+        self.height = y_list[-1] - y_list[0]
 
     def draw_rastring(self):
         j = 0
