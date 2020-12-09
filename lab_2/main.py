@@ -59,13 +59,6 @@ class BezierCalculator:
 
         self.curve_calculating(test_dot_list)
         self.draw_rastring()
-        """
-        # TODO:
-            -> поворот на угол      [*]
-            -> маштабирование       [*]
-            -> отдзеркаливание      [*]
-            -> зсув                 [*]
-        """
 
         # //////////////////////////////////////////////// SHIFTING //////////////////////////////////////////////////////
         up_button = tk.Button(frame, text='\t\tup\t\t', command=self.button_manager('up'))
@@ -95,7 +88,7 @@ class BezierCalculator:
         y_mirroring_button.grid(row=2, column=3)
 
         #//////////////////////////////////////////////// ANGLE /////////////////////////////////////////////////////////
-        turn_clockwise_button = tk.Button(frame, text='\t\tturn clockwise\t\t', command=self.button_manager('forward 45'))
+        turn_clockwise_button = tk.Button(frame, text='\t\tturn clockwise\t\t', command=self.button_manager('forward'))
         turn_clockwise_button.grid(row=3, column=2)
 
         root.mainloop()
